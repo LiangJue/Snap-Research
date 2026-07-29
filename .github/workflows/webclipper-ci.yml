@@ -3,20 +3,6 @@ name: Snap Research CI
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    paths:
-      - src/**
-      - tests/**
-      - public/**
-      - cloudflare-workers/**
-      - package.json
-      - package-lock.json
-      - wxt.config.ts
-      - tsconfig*.json
-      - eslint.config.mjs
-      - vitest.config.mts
-      - .prettierignore
-      - .github/scripts/webclipper/**
-      - .github/workflows/webclipper-ci.yml
 
 concurrency:
   group: webclipper-ci-${{ github.event.pull_request.number || github.ref }}
