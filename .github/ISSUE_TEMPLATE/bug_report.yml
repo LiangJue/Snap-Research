@@ -1,0 +1,58 @@
+name: Bug report
+description: Report a reproducible Snap Research problem without sharing private data.
+title: '[Bug]: '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Snap Research.
+
+        Do not include API keys, OAuth tokens, cookies, passwords, personal data,
+        private screenshots, Research Reports, or unredacted browsing content.
+        Report security vulnerabilities privately through the Security tab instead.
+
+  - type: input
+    id: version
+    attributes:
+      label: Snap Research version
+      placeholder: 'For example: 0.3.4'
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and operating system
+      placeholder: 'For example: Chrome 140 on Windows 11'
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Use the smallest sequence that reproduces the problem.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Observed behavior
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I removed credentials, personal data, and private research material.
+          required: true

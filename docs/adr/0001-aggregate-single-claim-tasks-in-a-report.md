@@ -1,0 +1,3 @@
+# Aggregate scenario-level tasks in one Research Report
+
+A captured source can be a screenshot region or selected browser text and can contain several researchable scenarios. We keep one scenario per Research Task and one result per Evidence Card, while tightly coupled verification points stay inside that task. Every task created from the same captured source is grouped under one Research Report and one conversation. Text selections bypass screenshot storage and image recognition. This preserves evidence and judgment clarity while giving the user one place to select claims, follow progress, review results, and export the research as a whole; we deliberately avoid both unrelated multi-scenario cards and separate conversations per scenario.

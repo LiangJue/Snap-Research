@@ -1,0 +1,18 @@
+{
+  "extName": {
+    "message": "Snap Research - Notion/Obsidian/Feishu に保存",
+    "description": "Chrome ウェブストアおよび拡張機能管理画面に表示される拡張機能名"
+  },
+  "extDescription": {
+    "message": "Snap Research はオープンソースの Web クリッパーで、AI チャット、Web 記事、動画字幕を Notion、Obsidian、または Feishu に保存します。",
+    "description": "Chrome ウェブストアおよび拡張機能管理画面に表示される短い説明（推奨 132 文字以内）"
+  },
+  "name": {
+    "message": "Snap Research - Notion/Obsidian/Feishu に保存",
+    "description": "App name for Safari"
+  },
+  "description": {
+    "message": "Snap Research はオープンソースの Web クリッパーで、AI チャット、Web 記事、動画字幕を Notion、Obsidian、または Feishu に保存します。",
+    "description": "App description for Safari"
+  }
+}

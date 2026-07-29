@@ -1,0 +1,15 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import AppShell from '@ui/app/AppShell';
+import '@ui/styles/tokens.css';
+import '@ui/styles/buttons.css';
+import 'react-tooltip/dist/react-tooltip.css';
+import '@ui/styles/tooltip.css';
+import '@ui/styles/tailwind.css';
+import '@entrypoints/app/style.css';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <AppShell />
+  </React.StrictMode>,
+);

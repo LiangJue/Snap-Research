@@ -1,0 +1,81 @@
+export type SettingsSectionKey =
+  | 'backup'
+  | 'notion'
+  | 'feishu'
+  | 'chat_with'
+  | 'aboutyou'
+  | 'obsidian'
+  | 'general'
+  | 'articles'
+  | 'ai_chats'
+  | 'videos'
+  | 'aboutme';
+
+export type SettingsSectionGroupTitleKey = 'settingsGroupFeatures' | 'settingsGroupData' | 'settingsGroupAbout';
+
+export type SettingsSectionGroup = {
+  titleKey: SettingsSectionGroupTitleKey;
+  sections: ReadonlyArray<{ key: SettingsSectionKey }>;
+};
+
+export const SETTINGS_SECTION_GROUPS: ReadonlyArray<SettingsSectionGroup> = [
+  {
+    titleKey: 'settingsGroupFeatures',
+    sections: [{ key: 'general' }, { key: 'articles' }, { key: 'ai_chats' }, { key: 'videos' }, { key: 'chat_with' }],
+  },
+  {
+    titleKey: 'settingsGroupData',
+    sections: [{ key: 'backup' }, { key: 'notion' }, { key: 'feishu' }, { key: 'obsidian' }],
+  },
+  {
+    titleKey: 'settingsGroupAbout',
+    sections: [{ key: 'aboutyou' }, { key: 'aboutme' }],
+  },
+];
+
+export const SETTINGS_SECTIONS: ReadonlyArray<{ key: SettingsSectionKey }> = SETTINGS_SECTION_GROUPS.flatMap(
+  (group) => group.sections,
+);
+
+export const DEFAULT_SETTINGS_SECTION_KEY: SettingsSectionKey = SETTINGS_SECTIONS[0]?.key ?? 'backup';
+
+export const SETTINGS_ACTIVE_SECTION_STORAGE_KEY = 'webclipper_settings_active_section';
+
+export function isSettingsSectionKey(value: string): value is SettingsSectionKey {
+  return SETTINGS_SECTIONS.some((section) => section.key === value);
+}
+
+export function coerceSettingsSectionKey(value: string): SettingsSectionKey | null {
+  const raw = String(value || '')
+    .trim()
+    .toLowerCase();
+  if (!raw) return null;
+  if (isSettingsSectionKey(raw)) return raw;
+
+  // Backward compat for older deep links/stored values.
+  if (raw === 'insight') return 'aboutyou';
+  if (raw === 'about') return 'aboutme';
+
+  return null;
+}
+
+export function readStoredSettingsSection(): SettingsSectionKey {
+  try {
+    const value = String(globalThis.window?.localStorage?.getItem(SETTINGS_ACTIVE_SECTION_STORAGE_KEY) || '')
+      .trim()
+      .toLowerCase();
+    const coerced = coerceSettingsSectionKey(value);
+    if (coerced) return coerced;
+  } catch (_e) {
+    // ignore
+  }
+  return DEFAULT_SETTINGS_SECTION_KEY;
+}
+
+export function writeStoredSettingsSection(value: SettingsSectionKey) {
+  try {
+    globalThis.window?.localStorage?.setItem(SETTINGS_ACTIVE_SECTION_STORAGE_KEY, value);
+  } catch (_e) {
+    // ignore
+  }
+}

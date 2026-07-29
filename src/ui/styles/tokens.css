@@ -1,0 +1,307 @@
+:root {
+  color-scheme: light dark;
+
+  /* ===== Design System Tokens (Light Mode) ===== */
+  /* Neutral paper foundation with soft warm accent preserved. */
+  /* Surface */
+  /* NOTE: Keep light mode closer to the dark theme's neutral base (less yellow cast). */
+  /* White-first light mode: keep surfaces visually white (sidebar uses `--bg-sunken`). */
+  /* Page background: keep perceptually white but not identical to cards. */
+  --bg-primary: rgb(250 251 252);
+  --bg-sunken: rgb(255 255 255);
+  --bg-card: rgb(255 255 255);
+  --bg-overlay: rgba(0, 0, 0, 0.42);
+
+  /* Text */
+  --text-primary: rgb(52 46 40);
+  --text-secondary: rgb(113 101 89);
+
+  /* Brand + On-Color */
+  --accent: rgb(246 196 166);
+  --accent-foreground: rgb(62 45 36);
+  --accent-hover: rgba(246, 196, 166, 0.86);
+  --accent-active: rgb(234 182 150);
+  --secondary: rgb(123 196 160);
+  --secondary-foreground: rgb(26 43 34);
+  --tertiary: rgb(232 200 106);
+  --tertiary-foreground: rgb(44 48 56);
+
+  /* Source brand colors */
+  --brand-chatgpt: #10a37f;
+  --brand-claude: #d97757;
+  --brand-deepseek: #6b7280;
+  --brand-notionai: #111111;
+  --brand-gemini: #4285f4;
+  --brand-googleaistudio: #4285f4;
+  --brand-kimi: #3b82f6;
+  --brand-doubao: #f97316;
+  --brand-yuanbao: #ef4444;
+  --brand-poe: #ec4899;
+  --brand-zai: #14b8a6;
+
+  /* Semantic + On-Color */
+  --error: rgb(229 62 62);
+  --error-foreground: rgb(255 255 255);
+  --warning: rgb(214 158 46);
+  --warning-foreground: rgb(44 48 56);
+  --success: rgb(56 161 105);
+  --success-foreground: rgb(255 255 255);
+  --info: rgb(49 130 206);
+  --info-foreground: rgb(255 255 255);
+
+  /* Utility */
+  /* Slightly stronger divider for white-on-white surfaces. */
+  --border: rgb(210 216 226);
+  --focus-ring: var(--accent);
+  /* Neutral shadow (avoid warm cast on white surfaces). */
+  --card-shadow: 0 10px 24px rgb(0 0 0 / 10%);
+  --surface-inset-highlight: rgb(255 255 255 / 55%);
+
+  /* Markdown reading profiles */
+  --markdown-font-medium:
+    'Charter', 'Iowan Old Style', 'Palatino Linotype', 'Georgia', 'Noto Serif CJK SC', 'Source Han Serif SC',
+    'Songti SC', serif;
+  --markdown-font-notion:
+    ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Noto Sans CJK SC', 'Source Han Sans SC',
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --markdown-font-book-cjk: 'Noto Serif CJK SC', 'Source Han Serif SC', 'Songti SC', 'STSong';
+  --markdown-font-book:
+    'Iowan Old Style', 'Baskerville', 'Palatino Linotype', 'Times New Roman', var(--markdown-font-book-cjk), serif;
+
+  /*
+   * Concentric radius scale (Apple-like):
+   * outer > card > control > chip > inline; circular elements use pill.
+   */
+  --radius-outer: 24px;
+  --radius-card: 20px;
+  --radius-control: 12px;
+  --radius-chip: 10px;
+  --radius-inline: 8px;
+  --radius-pill: 999px;
+
+  /* Component: chat bubbles */
+  --bubble-user-bg: var(--secondary);
+  --bubble-user-border: color-mix(in srgb, var(--secondary) 78%, var(--border));
+}
+
+/* ===== Design System Tokens (Dark Mode) ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Surface */
+    --bg-primary: rgb(26 28 32);
+    --bg-sunken: rgb(20 22 24);
+    --bg-card: rgb(38 40 48);
+    --bg-overlay: rgba(0, 0, 0, 0.65);
+
+    /* Text */
+    --text-primary: rgb(220 224 232);
+    --text-secondary: rgb(139 145 154);
+
+    /* Brand + On-Color */
+    --accent: rgb(255 212 194);
+    --accent-foreground: rgb(26 28 32);
+    --accent-hover: rgba(255, 212, 194, 0.85);
+    --accent-active: rgb(240 198 180);
+    --secondary: rgb(106 175 142);
+    --secondary-foreground: rgb(26 28 32);
+    --tertiary: rgb(212 184 94);
+    --tertiary-foreground: rgb(26 28 32);
+
+    /* Semantic + On-Color */
+    --error: rgb(252 129 129);
+    --error-foreground: rgb(26 28 32);
+    --warning: rgb(236 201 75);
+    --warning-foreground: rgb(26 28 32);
+    --success: rgb(104 211 145);
+    --success-foreground: rgb(26 28 32);
+    --info: rgb(99 179 237);
+    --info-foreground: rgb(26 28 32);
+
+    /* Utility */
+    --border: rgb(54 56 64);
+    --card-shadow: 0 12px 28px rgb(0 0 0 / 36%);
+    --surface-inset-highlight: rgb(255 255 255 / 14%);
+  }
+}
+
+[data-theme-mode='light'] {
+  color-scheme: light;
+
+  --bg-primary: rgb(250 251 252);
+  --bg-sunken: rgb(255 255 255);
+  --bg-card: rgb(255 255 255);
+  --bg-overlay: rgba(0, 0, 0, 0.42);
+
+  --text-primary: rgb(52 46 40);
+  --text-secondary: rgb(113 101 89);
+
+  --accent: rgb(246 196 166);
+  --accent-foreground: rgb(62 45 36);
+  --accent-hover: rgba(246, 196, 166, 0.86);
+  --accent-active: rgb(234 182 150);
+  --secondary: rgb(123 196 160);
+  --secondary-foreground: rgb(26 43 34);
+  --tertiary: rgb(232 200 106);
+  --tertiary-foreground: rgb(44 48 56);
+
+  --error: rgb(229 62 62);
+  --error-foreground: rgb(255 255 255);
+  --warning: rgb(214 158 46);
+  --warning-foreground: rgb(44 48 56);
+  --success: rgb(56 161 105);
+  --success-foreground: rgb(255 255 255);
+  --info: rgb(49 130 206);
+  --info-foreground: rgb(255 255 255);
+
+  --border: rgb(210 216 226);
+  --card-shadow: 0 10px 24px rgb(0 0 0 / 10%);
+  --surface-inset-highlight: rgb(255 255 255 / 55%);
+}
+
+[data-theme-mode='dark'] {
+  color-scheme: dark;
+
+  --bg-primary: rgb(26 28 32);
+  --bg-sunken: rgb(20 22 24);
+  --bg-card: rgb(38 40 48);
+  --bg-overlay: rgba(0, 0, 0, 0.65);
+
+  --text-primary: rgb(220 224 232);
+  --text-secondary: rgb(139 145 154);
+
+  --accent: rgb(255 212 194);
+  --accent-foreground: rgb(26 28 32);
+  --accent-hover: rgba(255, 212, 194, 0.85);
+  --accent-active: rgb(240 198 180);
+  --secondary: rgb(106 175 142);
+  --secondary-foreground: rgb(26 28 32);
+  --tertiary: rgb(212 184 94);
+  --tertiary-foreground: rgb(26 28 32);
+
+  --error: rgb(252 129 129);
+  --error-foreground: rgb(26 28 32);
+  --warning: rgb(236 201 75);
+  --warning-foreground: rgb(26 28 32);
+  --success: rgb(104 211 145);
+  --success-foreground: rgb(26 28 32);
+  --info: rgb(99 179 237);
+  --info-foreground: rgb(26 28 32);
+
+  --border: rgb(54 56 64);
+  --card-shadow: 0 12px 28px rgb(0 0 0 / 36%);
+  --surface-inset-highlight: rgb(255 255 255 / 14%);
+}
+
+/* =====================================================================
+ * Global extended themes plus legacy reader-local compatibility.
+ * [data-theme-mode=...] is the active app-wide surface. [data-reader-theme=...]
+ * remains here only for older stored reader preferences and external previews.
+ * ===================================================================== */
+[data-theme-mode='sepia'],
+[data-reader-theme='sepia'] {
+  color-scheme: light;
+
+  /* Surface: warm paper */
+  --bg-primary: rgb(244 236 220);
+  --bg-sunken: rgb(248 241 227);
+  --bg-card: rgb(250 244 231);
+  --bg-overlay: rgba(43, 34, 20, 0.42);
+
+  /* Text: warm ink */
+  --text-primary: rgb(74 60 44);
+  --text-secondary: rgb(124 108 86);
+
+  /* Utility */
+  --border: rgb(216 202 178);
+  --card-shadow: 0 10px 24px rgb(60 45 20 / 12%);
+  --surface-inset-highlight: rgb(255 250 240 / 60%);
+}
+
+[data-theme-mode='black'],
+[data-reader-theme='black'] {
+  color-scheme: dark;
+
+  /* Surface: true black (OLED-friendly) */
+  --bg-primary: rgb(0 0 0);
+  --bg-sunken: rgb(0 0 0);
+  --bg-card: rgb(18 18 20);
+  --bg-overlay: rgba(0, 0, 0, 0.75);
+
+  /* Text */
+  --text-primary: rgb(228 230 235);
+  --text-secondary: rgb(150 154 162);
+
+  /* Utility */
+  --border: rgb(40 42 48);
+  --card-shadow: 0 12px 28px rgb(0 0 0 / 55%);
+  --surface-inset-highlight: rgb(255 255 255 / 8%);
+}
+
+/* light / dark are explicit reader-local choices that must FORCE their palette
+ * regardless of the OS `prefers-color-scheme`. Without these blocks, selecting
+ * "Light" on a dark-OS machine (or vice-versa) would leave the reader following
+ * the system tokens (since data-reader-theme="light|dark" alone has no override),
+ * defeating the phase goal of light/dark reader-local themes. Values mirror the
+ * system light (:root) and dark (@media) reading tokens. (P3-audit / F-P3-01) */
+[data-reader-theme='light'] {
+  /* Surface: mirrors :root light */
+  --bg-primary: rgb(250 251 252);
+  --bg-sunken: rgb(255 255 255);
+  --bg-card: rgb(255 255 255);
+  --bg-overlay: rgba(0, 0, 0, 0.42);
+
+  /* Text */
+  --text-primary: rgb(52 46 40);
+  --text-secondary: rgb(113 101 89);
+
+  /* Utility */
+  --border: rgb(210 216 226);
+  --card-shadow: 0 10px 24px rgb(0 0 0 / 10%);
+  --surface-inset-highlight: rgb(255 255 255 / 55%);
+}
+
+[data-reader-theme='dark'] {
+  /* Surface: mirrors @media (prefers-color-scheme: dark) */
+  --bg-primary: rgb(26 28 32);
+  --bg-sunken: rgb(20 22 24);
+  --bg-card: rgb(38 40 48);
+  --bg-overlay: rgba(0, 0, 0, 0.65);
+
+  /* Text */
+  --text-primary: rgb(220 224 232);
+  --text-secondary: rgb(139 145 154);
+
+  /* Utility */
+  --border: rgb(54 56 64);
+  --card-shadow: 0 12px 28px rgb(0 0 0 / 36%);
+  --surface-inset-highlight: rgb(255 255 255 / 14%);
+}
+
+/* Reader sentence highlight -------------------------------------------------
+   Base tint plus theme-aware overrides so the highlight stays legible across the
+   five reader themes. `ArticleReaderView` applies the
+   `reader-tts-sentence-active` class to the decorated sentence span, and this
+   token drives the background color without any inline fallback. Theme-scoped
+   selectors outrank :root, so source order here is irrelevant. */
+:root {
+  --reader-highlight: rgba(250, 204, 21, 0.22);
+}
+[data-theme-mode='sepia'],
+[data-reader-theme='sepia'] {
+  --reader-highlight: rgba(150, 110, 40, 0.3);
+}
+[data-theme-mode='dark'],
+[data-theme-mode='black'],
+[data-reader-theme='dark'],
+[data-reader-theme='black'] {
+  --reader-highlight: rgba(250, 204, 21, 0.26);
+}
+.reader-tts-sentence {
+  cursor: pointer;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.reader-tts-sentence-active {
+  background-color: var(--reader-highlight, rgba(250, 204, 21, 0.22));
+  transition: background-color 120ms ease;
+}

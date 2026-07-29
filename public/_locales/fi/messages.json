@@ -1,0 +1,18 @@
+{
+  "extName": {
+    "message": "Snap Research - Tallenna Notioniin/Obsidiin/Feishuun",
+    "description": "Laajennuksen nimi, joka näkyy Chrome Web Storessa ja laajennusten hallinnassa"
+  },
+  "extDescription": {
+    "message": "Snap Research on avoimen lähdekoodin web-leikepöytä: AI-chatit, artikkelit ja videotekstitykset Notioniin, Obsidiin tai Feishuun.",
+    "description": "Lyhyt kuvaus, joka näkyy Chrome Web Storessa ja laajennusten hallinnassa (suositus <= 132 merkkiä)"
+  },
+  "name": {
+    "message": "Snap Research - Tallenna Notioniin/Obsidiin/Fe",
+    "description": "App name for Safari"
+  },
+  "description": {
+    "message": "Snap Research on avoimen lähdekoodin web-leikepöytä: AI-chatit, artikkelit ja videotekstitykset Notioniin, Obsidiin ta",
+    "description": "App description for Safari"
+  }
+}

@@ -1,0 +1,118 @@
+import { JSDOM } from 'jsdom';
+import { describe, expect, it, vi } from 'vitest';
+import normalizeApi from '@services/shared/normalize.ts';
+import { createCollectorEnv } from '../../src/collectors/collector-env.ts';
+import { createDeepseekCollectorDef } from '../../src/collectors/deepseek/deepseek-collector.ts';
+
+function setupDeepseekDom(html: string, url: string) {
+  const dom = new JSDOM(`<body>${html}</body>`, { url });
+  return dom;
+}
+
+describe('deepseek-collector', () => {
+  it('extracts assistant contentMarkdown from semantic markdown DOM', async () => {
+    const html = `
+      <main class="dad65929">
+        <div class="_9663006">
+          <div class="fbb737a4">你好</div>
+        </div>
+        <div class="_4f9bf79 _43c05b5">
+          <div class="ds-message">
+            <div class="ds-markdown">
+              <h1><span>主标题</span></h1>
+              <blockquote>
+                <p class="ds-markdown-paragraph"><span>引用内容</span></p>
+                <blockquote><p class="ds-markdown-paragraph"><span>嵌套引用</span></p></blockquote>
+              </blockquote>
+              <ul>
+                <li>
+                  <p class="ds-markdown-paragraph"><span>父级条目</span></p>
+                  <ul><li><p class="ds-markdown-paragraph"><span>子级条目</span></p></li></ul>
+                </li>
+              </ul>
+              <ol start="2"><li><p class="ds-markdown-paragraph"><span>第二项</span></p></li></ol>
+              <p class="ds-markdown-paragraph"><strong><span>粗体</span></strong> <em><span>斜体</span></em> <code>sum(1,2)</code> <a href="https://example.com">链接</a></p>
+              <table>
+                <thead><tr><th><span>语法元素</span></th><th><span>说明</span></th></tr></thead>
+                <tbody><tr><td><span>标题</span></td><td><span>使用 #</span></td></tr></tbody>
+              </table>
+              <div class="md-code-block md-code-block-dark">
+                <div class="md-code-block-banner-wrap">
+                  <span class="d813de27">python</span>
+                  <button role="button">复制</button>
+                  <button role="button">下载</button>
+                </div>
+                <pre><span>def greet(name):</span><br><span>    return f"Hello, {name}"</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    `;
+
+    const dom = setupDeepseekDom(html, 'https://chat.deepseek.com/a/chat/s/abc123');
+    const env = createCollectorEnv({
+      window: dom.window as any,
+      document: dom.window.document as any,
+      location: dom.window.location as any,
+      normalize: normalizeApi,
+    });
+
+    const snap = createDeepseekCollectorDef(env).collector.capture() as any;
+    expect(snap).toBeTruthy();
+    expect(snap.messages.length).toBe(2);
+    const assistant = snap.messages.find((m: { role: string }) => m.role === 'assistant');
+    expect(assistant).toBeTruthy();
+    expect(assistant.contentMarkdown).toContain('# 主标题');
+    expect(assistant.contentMarkdown).toContain('> 引用内容');
+    expect(assistant.contentMarkdown).toContain('> > 嵌套引用');
+    expect(assistant.contentMarkdown).toContain('- 父级条目');
+    expect(assistant.contentMarkdown).toContain('  - 子级条目');
+    expect(assistant.contentMarkdown).toContain('2. 第二项');
+    expect(assistant.contentMarkdown).toContain('**粗体**');
+    expect(assistant.contentMarkdown).toContain('*斜体*');
+    expect(assistant.contentMarkdown).toContain('`sum(1,2)`');
+    expect(assistant.contentMarkdown).toContain('[链接](https://example.com)');
+    expect(assistant.contentMarkdown).toContain('| 语法元素 | 说明 |');
+    expect(assistant.contentMarkdown).toContain('```python');
+    expect(assistant.contentMarkdown).toContain('def greet(name):');
+    expect(assistant.contentMarkdown).not.toContain('复制');
+    expect(assistant.contentMarkdown).not.toContain('下载');
+
+    expect(assistant.contentText).toContain('主标题');
+    expect(assistant.contentText).toContain('def greet(name):');
+    expect(assistant.contentText).not.toContain('复制');
+  });
+
+  it('falls back to plain text markdown when markdown helper is unavailable', async () => {
+    const html = `
+      <main class="dad65929">
+        <div class="_4f9bf79 _43c05b5">
+          <div class="ds-message">
+            <div class="ds-markdown"><p class="ds-markdown-paragraph">plain answer</p></div>
+          </div>
+        </div>
+      </main>
+    `;
+
+    vi.resetModules();
+    vi.doMock('../../src/collectors/deepseek/deepseek-markdown.ts', () => ({ default: {} }));
+
+    const dom = setupDeepseekDom(html, 'https://chat.deepseek.com/a/chat/s/fallback1');
+    const { createDeepseekCollectorDef: createDef } =
+      await import('../../src/collectors/deepseek/deepseek-collector.ts');
+    const env = createCollectorEnv({
+      window: dom.window as any,
+      document: dom.window.document as any,
+      location: dom.window.location as any,
+      normalize: normalizeApi,
+    });
+
+    const snap = createDef(env).collector.capture() as any;
+    expect(snap).toBeTruthy();
+    expect(snap.messages.length).toBe(1);
+    expect(snap.messages[0].role).toBe('assistant');
+    expect(snap.messages[0].contentText).toBe('plain answer');
+    expect(snap.messages[0].contentMarkdown).toBe('plain answer');
+  });
+});

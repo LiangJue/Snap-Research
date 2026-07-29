@@ -1,0 +1,201 @@
+import { useState } from 'react';
+import { ChevronRight, Palette, Pause, Play, Square, Type, Volume2 } from 'lucide-react';
+
+import { t } from '@i18n';
+import {
+  buttonFilledClassName,
+  buttonMenuItemClassName,
+  buttonTintClassName,
+  menuChevronClassName,
+} from '@ui/shared/button-styles';
+import { NarrationPanel } from '@ui/reader/NarrationPanel';
+import { TextLayoutPanel } from '@ui/reader/TextLayoutPanel';
+import { ThemePanel } from '@ui/reader/ThemePanel';
+import type { ReaderToolbarFeatures, ReaderToolbarNarration } from '@ui/reader/ReaderToolbar';
+import type { ReaderPrefs } from '@services/protocols/reader-prefs';
+import type { AppThemeMode } from '@services/protocols/app-theme';
+
+type ReaderHeaderToolbarProps = {
+  features: ReaderToolbarFeatures;
+  prefs: ReaderPrefs;
+  update: (patch: Partial<ReaderPrefs>) => void | Promise<void>;
+  themeMode: AppThemeMode;
+  updateThemeMode: (mode: AppThemeMode) => void | Promise<void>;
+  narration: ReaderToolbarNarration;
+  className?: string;
+};
+
+type OpenPanel = 'text' | 'theme' | 'narration' | null;
+
+const LABELS = {
+  toolbarAria: t('readerToolbarAria'),
+  text: t('readerTextLayoutButton'),
+  theme: t('readerThemeButton'),
+  narration: t('readerNarrationButton'),
+  play: t('readerNarrationPlay'),
+  reading: t('readerNarrationReading'),
+  pause: t('readerNarrationPause'),
+  stop: t('readerNarrationStop'),
+} as const;
+
+const PANEL_CLASS =
+  'tw-mt-1 tw-w-full tw-rounded-[var(--radius-control)] tw-border tw-border-[var(--border)] tw-bg-[var(--bg-sunken)] tw-p-2 tw-text-[var(--text-primary)]';
+const PANEL_CONTENT_CLASS = 'tw-flex tw-min-w-0 tw-flex-col tw-gap-3';
+const readerTriggerClassName = () =>
+  [buttonMenuItemClassName(), 'tw-w-full tw-items-center tw-justify-between tw-text-[13px]'].join(' ');
+const readerChevronClassName = (open: boolean) =>
+  [menuChevronClassName(), 'tw-transition-transform', open ? 'tw-rotate-90' : ''].filter(Boolean).join(' ');
+const headerNarrationTransportButtonClassName = (active: boolean) =>
+  [active ? buttonFilledClassName() : buttonTintClassName(), 'webclipper-btn--icon'].join(' ');
+
+export function ReaderHeaderToolbar({
+  features,
+  prefs,
+  update,
+  themeMode,
+  updateThemeMode,
+  narration,
+  className,
+}: ReaderHeaderToolbarProps) {
+  const [openPanel, setOpenPanel] = useState<OpenPanel>(null);
+
+  if (!features.textLayout && !features.theme && !features.narration) return null;
+
+  const narrationActionLabel =
+    narration.state === 'loading' ? LABELS.reading : narration.isPlaying ? LABELS.pause : LABELS.play;
+  const NarrationActionIcon = narration.state === 'loading' || narration.isPlaying ? Pause : Play;
+
+  return (
+    <div
+      role="group"
+      aria-label={LABELS.toolbarAria}
+      className={['tw-flex tw-flex-col tw-gap-1', className || ''].join(' ').trim()}
+      data-reader-header-toolbar="true"
+    >
+      {features.textLayout ? (
+        <div className="tw-min-w-0">
+          <button
+            type="button"
+            data-reader-header-trigger="text"
+            aria-label={LABELS.text}
+            aria-expanded={openPanel === 'text'}
+            className={readerTriggerClassName()}
+            onClick={() => setOpenPanel((current) => (current === 'text' ? null : 'text'))}
+          >
+            <span className="tw-inline-flex tw-items-center tw-gap-2">
+              <Type size={16} strokeWidth={2.2} aria-hidden="true" />
+              <span>{LABELS.text}</span>
+            </span>
+            <ChevronRight
+              size={14}
+              strokeWidth={2.2}
+              aria-hidden="true"
+              className={readerChevronClassName(openPanel === 'text')}
+            />
+          </button>
+          {openPanel === 'text' ? (
+            <div role="group" aria-label={LABELS.text} className={PANEL_CLASS} data-reader-header-panel="text">
+              <div className={PANEL_CONTENT_CLASS}>
+                <TextLayoutPanel prefs={prefs} update={update} />
+              </div>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {features.theme ? (
+        <div className="tw-min-w-0">
+          <button
+            type="button"
+            data-reader-header-trigger="theme"
+            aria-label={LABELS.theme}
+            aria-expanded={openPanel === 'theme'}
+            className={readerTriggerClassName()}
+            onClick={() => setOpenPanel((current) => (current === 'theme' ? null : 'theme'))}
+          >
+            <span className="tw-inline-flex tw-items-center tw-gap-2">
+              <Palette size={16} strokeWidth={2.2} aria-hidden="true" />
+              <span>{LABELS.theme}</span>
+            </span>
+            <ChevronRight
+              size={14}
+              strokeWidth={2.2}
+              aria-hidden="true"
+              className={readerChevronClassName(openPanel === 'theme')}
+            />
+          </button>
+          {openPanel === 'theme' ? (
+            <div role="group" aria-label={LABELS.theme} className={PANEL_CLASS} data-reader-header-panel="theme">
+              <div className={PANEL_CONTENT_CLASS}>
+                <ThemePanel mode={themeMode} update={updateThemeMode} />
+              </div>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {features.narration ? (
+        <div className="tw-min-w-0">
+          <button
+            type="button"
+            data-reader-header-trigger="narration"
+            aria-label={LABELS.narration}
+            aria-expanded={openPanel === 'narration'}
+            className={readerTriggerClassName()}
+            onClick={() => setOpenPanel((current) => (current === 'narration' ? null : 'narration'))}
+          >
+            <span className="tw-inline-flex tw-items-center tw-gap-2">
+              <Volume2 size={16} strokeWidth={2.2} aria-hidden="true" />
+              <span>{LABELS.narration}</span>
+            </span>
+            <ChevronRight
+              size={14}
+              strokeWidth={2.2}
+              aria-hidden="true"
+              className={readerChevronClassName(openPanel === 'narration')}
+            />
+          </button>
+          {openPanel === 'narration' ? (
+            <div
+              role="group"
+              aria-label={LABELS.narration}
+              className={PANEL_CLASS}
+              data-reader-header-panel="narration"
+            >
+              <div className={PANEL_CONTENT_CLASS}>
+                <div className="tw-flex tw-gap-1.5">
+                  <button
+                    type="button"
+                    className={headerNarrationTransportButtonClassName(true)}
+                    aria-label={narrationActionLabel}
+                    title={narrationActionLabel}
+                    aria-pressed={narration.isPlaying || narration.state === 'loading'}
+                    onClick={narration.toggle}
+                  >
+                    <NarrationActionIcon size={18} strokeWidth={2.25} />
+                  </button>
+                  <button
+                    type="button"
+                    className={headerNarrationTransportButtonClassName(false)}
+                    aria-label={LABELS.stop}
+                    title={LABELS.stop}
+                    onClick={narration.stop}
+                    disabled={narration.state === 'idle'}
+                  >
+                    <Square size={18} strokeWidth={2.25} />
+                  </button>
+                </div>
+                <NarrationPanel
+                  prefs={prefs}
+                  update={update}
+                  error={narration.error}
+                  webSpeechAvailable={narration.webSpeechAvailable}
+                />
+              </div>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}

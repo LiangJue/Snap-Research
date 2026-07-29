@@ -1,0 +1,75 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { JSDOM } from 'jsdom';
+
+import { extractWebArticleFromCurrentPage } from '../../src/collectors/web/article-extract/engine';
+import { buildDedaoNoteDocument } from '../helpers/dedao-note-fixture';
+
+function setDomGlobals(dom: JSDOM) {
+  // @ts-expect-error test global
+  globalThis.window = dom.window;
+  // @ts-expect-error test global
+  globalThis.document = dom.window.document;
+  // @ts-expect-error test global
+  globalThis.Node = dom.window.Node;
+  // @ts-expect-error test global
+  globalThis.location = dom.window.location;
+  // @ts-expect-error test global
+  globalThis.getComputedStyle = dom.window.getComputedStyle;
+}
+
+function clearDomGlobals() {
+  // @ts-expect-error test global
+  delete globalThis.window;
+  // @ts-expect-error test global
+  delete globalThis.document;
+  // @ts-expect-error test global
+  delete globalThis.Node;
+  // @ts-expect-error test global
+  delete globalThis.location;
+  // @ts-expect-error test global
+  delete globalThis.getComputedStyle;
+  // @ts-expect-error test global
+  delete globalThis.Readability;
+}
+
+afterEach(() => {
+  clearDomGlobals();
+  vi.restoreAllMocks();
+});
+
+describe('article-extract dedao readability fallback', () => {
+  it('continues past a truncated readability result and recovers the main note body', async () => {
+    const dom = new JSDOM(buildDedaoNoteDocument({ includeRightRail: true }), {
+      url: 'https://www.dedao.cn/knowledge/note/detail?id=AaWVPxLgY8DkXGMkJyEGXnDqwEoXJ9',
+      pretendToBeVisual: true,
+    });
+
+    setDomGlobals(dom);
+
+    class MockReadability {
+      parse() {
+        return {
+          title: '得到APP - 知识就是力量，知识就在得到',
+          byline: '',
+          excerpt: '',
+          content: '<div><p>联系我们：</p><p>客服电话：400-0526-000</p><p>下载「得到App」</p></div>',
+          textContent: '联系我们： 客服电话：400-0526-000 下载「得到App」',
+        };
+      }
+    }
+
+    // @ts-expect-error test global
+    globalThis.Readability = MockReadability;
+
+    const extracted = await extractWebArticleFromCurrentPage({
+      stabilizationTimeoutMs: 1,
+      stabilizationMinTextLength: 1,
+    });
+
+    const markdown = String(extracted.contentMarkdown || '');
+
+    expect(markdown).toContain('正文段落一：这是用于抽取回归测试的示例内容。');
+    expect(markdown).toContain('正文段落二：抽取器应该保留这段核心文本。');
+    expect(markdown).not.toContain('客服电话：400-0526-000');
+  });
+});

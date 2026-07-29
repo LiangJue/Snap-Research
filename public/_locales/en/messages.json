@@ -1,0 +1,18 @@
+{
+  "extName": {
+    "message": "Snap Research - Evidence Research",
+    "description": "Extension name shown in Chrome Web Store and extension manager"
+  },
+  "extDescription": {
+    "message": "Research screenshot or text claims with ChatGPT or OpenAI and save source-backed Evidence Cards locally.",
+    "description": "Short description shown in Chrome Web Store and extension manager (<=132 chars recommended)"
+  },
+  "name": {
+    "message": "Snap Research - Evidence Research",
+    "description": "App name for Safari"
+  },
+  "description": {
+    "message": "Research screenshot or text claims with ChatGPT or OpenAI and save source-backed Evidence Cards locally.",
+    "description": "App description for Safari"
+  }
+}

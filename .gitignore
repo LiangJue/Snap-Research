@@ -1,0 +1,62 @@
+node_modules/
+dist/
+dist-firefox/
+dist-edge/
+*.xpi
+*.zip
+.DS_Store
+features/
+archived_features/
+/build/*
+!/build/katex-quirks-warning.ts
+
+demo/
+/Backend/.venv
+*.db
+Backend/.env
+.kiro/
+.claude/
+.specify/
+.github/*.md
+.cursorignore
+.github/hooks/
+.githooks/
+webclipper/.tmp-wxt-spike/
+
+# Notion OAuth 配置文件（包含敏感信息）
+notion_auth.env
+**/notion_auth.env
+*.env
+!*.env.example
+
+# 本地 Notion OAuth Swift 配置文件（只在开发者本机存在）
+NotionConfig.swift
+
+## User settings
+xcuserdata/
+
+
+.build/
+.swiftpm/
+
+node_modules/
+.output/
+.wxt/
+.vite/
+stats.html
+stats-*.json
+web-ext.config.ts
+
+.codex/
+
+.codegraph/
+metadata/
+_temp/
+
+# Local Codex handoff and visual QA artifacts
+/PROJECT_STATUS.md
+/design-qa.md
+/tmp/
+
+# Local research reports and imported source material
+/docs/research/

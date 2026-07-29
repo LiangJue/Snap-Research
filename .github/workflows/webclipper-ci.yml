@@ -1,0 +1,50 @@
+name: Snap Research CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - src/**
+      - tests/**
+      - public/**
+      - cloudflare-workers/**
+      - package.json
+      - package-lock.json
+      - wxt.config.ts
+      - tsconfig*.json
+      - eslint.config.mjs
+      - vitest.config.mts
+      - .prettierignore
+      - .github/scripts/webclipper/**
+      - .github/workflows/webclipper-ci.yml
+
+concurrency:
+  group: webclipper-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  gate-ci:
+    name: gate:ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: ${{ !github.event.pull_request.draft }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: gate:ci
+        run: npm run gate:ci
